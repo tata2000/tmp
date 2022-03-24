@@ -1,9 +1,16 @@
 # Sourced from https://github.com/uphold/docker-litecoin-core
-FROM debian:stable-slim
+ARG DEBIAN_VERSION=stable-slim
+FROM debian:${DEBIAN_VERSION}
+
+# Get litecoin version 0.18.1, but possible to override
+ARG LITECOIN_VERSION=0.18.1
+
+
 
 LABEL maintainer.0="João Fonseca (@joaopaulofonseca)" \
   maintainer.1="Pedro Branco (@pedrobranco)" \
-  maintainer.2="Rui Marinho (@ruimarinho)"
+  maintainer.2="Rui Marinho (@ruimarinho)" \
+  maintainer.3="Tatyana Arenburg"
 
 # Add litecoin user, all necessary OS packages and retrieve gpg keys to validate gosu and litecoin
 RUN useradd -r litecoin \
@@ -24,8 +31,8 @@ RUN useradd -r litecoin \
     gpg --no-tty --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" ; \
   done
 
-# Get Gosu version 1.1
-ENV GOSU_VERSION=1.10
+# Get Gosu version 1.14
+ENV GOSU_VERSION=1.14
 
 # Download gosu and verify checksum.  
 RUN curl -o /usr/local/bin/gosu -fSL https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-$(dpkg --print-architecture) \
@@ -34,8 +41,6 @@ RUN curl -o /usr/local/bin/gosu -fSL https://github.com/tianon/gosu/releases/dow
   && rm /usr/local/bin/gosu.asc \
   && chmod +x /usr/local/bin/gosu
 
-# Get litecoin version 0.18.1
-ENV LITECOIN_VERSION=0.18.1
 ENV LITECOIN_DATA=/home/litecoin/.litecoin
 
 # Download litecoin and verify checksum.
@@ -47,6 +52,7 @@ RUN curl -SLO https://download.litecoin.org/litecoin-${LITECOIN_VERSION}/linux/l
 
 # Copy the entrypoint script into the container
 COPY docker-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # Create a mount point 
 VOLUME ["/home/litecoin/.litecoin"]
