@@ -1,3 +1,5 @@
+##If you are looging at this code - let me know what you think :)
+
 # Litecoin
 
 ### 1. Docker-ayes
