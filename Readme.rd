@@ -1,4 +1,4 @@
-##If you are looging at this code - let me know what you think :)
+##If you are looking at this code - let me know what you think :)
 
 # Litecoin
 
